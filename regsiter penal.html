@@ -9,241 +9,60 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Josefin Sans',sans-serif;
-}
-
-body{
-background:#f4f6f9;
-overflow-x:hidden;
-}
-
-/* SIDEBAR */
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Josefin Sans',sans-serif;}
+body{display:flex;background:#f4f6f9;}
 .sidebar{
-width:250px;
-background:#7a3e22;
-height:100vh;
-position:fixed;
-left:-250px;
-top:0;
-color:#fff;
-padding:25px 20px;
-transition:0.4s;
-z-index:1000;
+width:240px;background:#7a3e22;height:100vh;color:#fff;
+position:fixed;left:0;top:0;padding:25px 15px;
 }
-
-.sidebar.active{
-left:0;
-}
-
-.sidebar-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:30px;
-}
-
-.sidebar-header h3{
-font-size:18px;
-}
-
-.close-btn{
-cursor:pointer;
-font-size:18px;
-}
-
-.sidebar ul{
-list-style:none;
-}
-
-.sidebar ul li{
-padding:12px;
-margin:10px 0;
-border-radius:6px;
-cursor:pointer;
-display:flex;
-align-items:center;
-gap:10px;
-transition:0.3s;
-}
-
-.sidebar ul li:hover{
-background:rgba(255,255,255,0.2);
-}
-
-/* OVERLAY */
-
-.overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.4);
-display:none;
-z-index:900;
-}
-
-.overlay.active{
-display:block;
-}
-
-/* MAIN */
-
-.main{
-padding:20px;
-transition:0.3s;
-}
-
-/* NAVBAR */
-
+.sidebar h3{text-align:center;margin-bottom:30px;}
+.sidebar ul{list-style:none;}
+.sidebar ul li{padding:12px;margin:10px 0;cursor:pointer;border-radius:6px;}
+.sidebar ul li:hover{background:rgba(255,255,255,0.2);}
+.main{margin-left:240px;flex:1;padding:20px;}
 .navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#fff;
-padding:15px 20px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-margin-bottom:20px;
+display:flex;justify-content:space-between;align-items:center;
+background:#fff;padding:15px 20px;border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);margin-bottom:20px;
 }
-
-.menu-btn{
-font-size:20px;
-cursor:pointer;
-}
-
-.nav-right{
-display:flex;
-gap:20px;
-}
-
-.nav-right i{
-cursor:pointer;
-}
-
-/* CARDS */
-
-.cards{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-margin-bottom:25px;
-}
-
+.cards{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:25px;}
 .card{
-flex:1;
-min-width:220px;
-background:#fff;
-padding:20px;
-border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+flex:1;min-width:200px;background:#fff;padding:20px;
+border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
-
-.card h3{
-color:#7a3e22;
-font-size:24px;
-}
-
-/* TABLE */
-
+.card h3{color:#7a3e22;font-size:24px;}
 table{
-width:100%;
-border-collapse:collapse;
-background:#fff;
-border-radius:10px;
-overflow:hidden;
+width:100%;border-collapse:collapse;background:#fff;
+border-radius:10px;overflow:hidden;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
-
-th,td{
-padding:12px;
-text-align:center;
-}
-
-th{
-background:#7a3e22;
-color:#fff;
-}
-
-tr:nth-child(even){
-background:#f2f2f2;
-}
-
+th,td{padding:12px;text-align:center;}
+th{background:#7a3e22;color:#fff;}
+tr:nth-child(even){background:#f2f2f2;}
 button{
-padding:6px 10px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-font-weight:600;
+padding:6px 10px;border:none;border-radius:5px;
+cursor:pointer;font-weight:600;color:#fff;
 }
-
-.block{ background:#dc3545; color:#fff; }
-.unblock{ background:#28a745; color:#fff; }
-.delete{ background:#000; color:#fff; }
-
-button:hover{
-opacity:0.85;
-}
-
-/* DESKTOP VIEW */
-
-@media(min-width:900px){
-
-.sidebar{
-left:0;
-}
-
-.overlay{
-display:none !important;
-}
-
-.main{
-margin-left:250px;
-}
-
-.close-btn{
-display:none;
-}
-
-}
-
+.block{background:#dc3545;}
+.unblock{background:#28a745;}
+.delete{background:#000;}
 </style>
 </head>
 <body>
 
-<!-- OVERLAY -->
-<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-
-<div class="sidebar-header">
+<div class="sidebar">
 <h3>MAHARVI ADMIN</h3>
-<i class="fas fa-times close-btn" onclick="closeSidebar()"></i>
-</div>
-
 <ul>
 <li><i class="fas fa-chart-line"></i> Dashboard</li>
 <li><i class="fas fa-users"></i> Customers</li>
-<li><i class="fas fa-file-invoice"></i> Reports</li>
-<li><i class="fas fa-sign-out-alt"></i> Logout</li>
 </ul>
-
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <div class="navbar">
-<i class="fas fa-bars menu-btn" onclick="openSidebar()"></i>
 <h2>Dashboard</h2>
-
-<div class="nav-right">
+<div>
 <i class="fas fa-bell"></i>
 <i class="fas fa-user-circle"></i>
 </div>
@@ -254,12 +73,10 @@ display:none;
 <h3 id="totalUsers">0</h3>
 <p>Total Users</p>
 </div>
-
 <div class="card">
 <h3 id="activeUsers">0</h3>
 <p>Active Users</p>
 </div>
-
 <div class="card">
 <h3 id="blockedUsers">0</h3>
 <p>Blocked Users</p>
@@ -281,73 +98,82 @@ display:none;
 
 </div>
 
-<script>
+<script type="module">
 
-function openSidebar(){
-document.getElementById("sidebar").classList.add("active");
-document.getElementById("overlay").classList.add("active");
-}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-function closeSidebar(){
-document.getElementById("sidebar").classList.remove("active");
-document.getElementById("overlay").classList.remove("active");
-}
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+};
 
-function loadUsers(){
-let users = JSON.parse(localStorage.getItem("maharviUsers")) || [];
-let table = document.getElementById("userTable");
-table.innerHTML = "";
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-let active = 0;
-let blocked = 0;
+const table = document.getElementById("userTable");
 
-users.forEach((u,index)=>{
+onSnapshot(collection(db, "users"), (snapshot) => {
 
-if(u.blocked) blocked++;
-else active++;
+  table.innerHTML = "";
 
-table.innerHTML += `
-<tr>
-<td>${u.id}</td>
-<td>${u.name}</td>
-<td>${u.email}</td>
-<td style="color:${u.blocked?'red':'green'}">
-${u.blocked ? "Blocked" : "Active"}
-</td>
-<td>
-<button class="${u.blocked?'unblock':'block'}"
-onclick="toggleBlock(${index})">
-${u.blocked?'Unblock':'Block'}
-</button>
-<button class="delete" onclick="deleteUser(${index})">
-Delete
-</button>
-</td>
-</tr>`;
+  let total = 0;
+  let active = 0;
+  let blocked = 0;
+
+  snapshot.forEach((docSnap) => {
+
+    const user = docSnap.data();
+    total++;
+
+    if(user.blocked){
+      blocked++;
+    }else{
+      active++;
+    }
+
+    table.innerHTML += `
+      <tr>
+        <td>${user.userId}</td>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td style="color:${user.blocked?'red':'green'}">
+          ${user.blocked?'Blocked':'Active'}
+        </td>
+        <td>
+          <button class="${user.blocked?'unblock':'block'}"
+          onclick="toggleBlock('${docSnap.id}', ${user.blocked})">
+          ${user.blocked?'Unblock':'Block'}
+          </button>
+
+          <button class="delete"
+          onclick="deleteUser('${docSnap.id}')">
+          Delete
+          </button>
+        </td>
+      </tr>
+    `;
+
+  });
+
+  document.getElementById("totalUsers").innerText = total;
+  document.getElementById("activeUsers").innerText = active;
+  document.getElementById("blockedUsers").innerText = blocked;
+
 });
 
-document.getElementById("totalUsers").innerText = users.length;
-document.getElementById("activeUsers").innerText = active;
-document.getElementById("blockedUsers").innerText = blocked;
+window.toggleBlock = async function(id, currentStatus){
+  await updateDoc(doc(db, "users", id), {
+    blocked: !currentStatus
+  });
 }
 
-function toggleBlock(i){
-let users = JSON.parse(localStorage.getItem("maharviUsers"));
-users[i].blocked = !users[i].blocked;
-localStorage.setItem("maharviUsers", JSON.stringify(users));
-loadUsers();
+window.deleteUser = async function(id){
+  if(confirm("Delete this user?")){
+    await deleteDoc(doc(db, "users", id));
+  }
 }
-
-function deleteUser(i){
-if(confirm("Delete this user?")){
-let users = JSON.parse(localStorage.getItem("maharviUsers"));
-users.splice(i,1);
-localStorage.setItem("maharviUsers", JSON.stringify(users));
-loadUsers();
-}
-}
-
-loadUsers();
 
 </script>
 
