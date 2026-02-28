@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Maharvi Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Josefin Sans',sans-serif;}
+body{display:flex;background:#f4f6f9;}
+.sidebar{
+width:240px;background:#7a3e22;height:100vh;color:#fff;
+position:fixed;left:0;top:0;padding:25px 15px;
+}
+.sidebar h3{text-align:center;margin-bottom:30px;}
+.sidebar ul{list-style:none;}
+.sidebar ul li{padding:12px;margin:10px 0;cursor:pointer;border-radius:6px;}
+.sidebar ul li:hover{background:rgba(255,255,255,0.2);}
+.main{margin-left:240px;flex:1;padding:20px;}
+.navbar{
+display:flex;justify-content:space-between;align-items:center;
+background:#fff;padding:15px 20px;border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);margin-bottom:20px;
+}
+.cards{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:25px;}
+.card{
+flex:1;min-width:200px;background:#fff;padding:20px;
+border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.card h3{color:#7a3e22;font-size:24px;}
+table{
+width:100%;border-collapse:collapse;background:#fff;
+border-radius:10px;overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+th,td{padding:12px;text-align:center;}
+th{background:#7a3e22;color:#fff;}
+tr:nth-child(even){background:#f2f2f2;}
+button{
+padding:6px 10px;border:none;border-radius:5px;
+cursor:pointer;font-weight:600;color:#fff;
+}
+.block{background:#dc3545;}
+.unblock{background:#28a745;}
+.delete{background:#000;}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+<h3>MAHARVI ADMIN</h3>
+<ul>
+<li><i class="fas fa-chart-line"></i> Dashboard</li>
+<li><i class="fas fa-users"></i> Customers</li>
+</ul>
+</div>
+
+<div class="main">
+
+<div class="navbar">
+<h2>Dashboard</h2>
+<div>
+<i class="fas fa-bell"></i>
+<i class="fas fa-user-circle"></i>
+</div>
+</div>
+
+<div class="cards">
+<div class="card">
+<h3 id="totalUsers">0</h3>
+<p>Total Users</p>
+</div>
+<div class="card">
+<h3 id="activeUsers">0</h3>
+<p>Active Users</p>
+</div>
+<div class="card">
+<h3 id="blockedUsers">0</h3>
+<p>Blocked Users</p>
+</div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="userTable"></tbody>
+</table>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const table = document.getElementById("userTable");
+
+onSnapshot(collection(db, "users"), (snapshot) => {
+
+  table.innerHTML = "";
+
+  let total = 0;
+  let active = 0;
+  let blocked = 0;
+
+  snapshot.forEach((docSnap) => {
+
+    const user = docSnap.data();
+    total++;
+
+    if(user.blocked){
+      blocked++;
+    }else{
+      active++;
+    }
+
+    table.innerHTML += `
+      <tr>
+        <td>${user.userId}</td>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td style="color:${user.blocked?'red':'green'}">
+          ${user.blocked?'Blocked':'Active'}
+        </td>
+        <td>
+          <button class="${user.blocked?'unblock':'block'}"
+          onclick="toggleBlock('${docSnap.id}', ${user.blocked})">
+          ${user.blocked?'Unblock':'Block'}
+          </button>
+
+          <button class="delete"
+          onclick="deleteUser('${docSnap.id}')">
+          Delete
+          </button>
+        </td>
+      </tr>
+    `;
+
+  });
+
+  document.getElementById("totalUsers").innerText = total;
+  document.getElementById("activeUsers").innerText = active;
+  document.getElementById("blockedUsers").innerText = blocked;
+
+});
+
+window.toggleBlock = async function(id, currentStatus){
+  await updateDoc(doc(db, "users", id), {
+    blocked: !currentStatus
+  });
+}
+
+window.deleteUser = async function(id){
+  if(confirm("Delete this user?")){
+    await deleteDoc(doc(db, "users", id));
+  }
+}
+
+</script>
+
+</body>
+</html>
