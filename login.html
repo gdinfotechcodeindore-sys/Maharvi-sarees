@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Maharvi Account System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Josefin+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Josefin Sans',sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#c8b6a6,#e8d8c8,#d2b9a5);
+}
+
+.container{
+width:95%;
+max-width:420px;
+padding:40px 30px;
+border-radius:18px;
+background:rgba(255,255,255,0.25);
+backdrop-filter:blur(15px);
+box-shadow:0 15px 40px rgba(0,0,0,0.2);
+transition:0.4s;
+}
+
+.container:hover{
+transform:translateY(-5px);
+}
+
+h2{
+font-family:'Playfair Display',serif;
+text-align:center;
+color:#7a3e22;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:13px;
+margin:10px 0;
+border-radius:10px;
+border:1px solid rgba(0,0,0,0.2);
+outline:none;
+font-size:14px;
+transition:0.3s;
+}
+
+input:focus{
+border-color:#7a3e22;
+box-shadow:0 0 8px rgba(122,62,34,0.3);
+}
+
+button{
+width:100%;
+padding:13px;
+margin-top:10px;
+background:linear-gradient(45deg,#7a3e22,#4a2c2a);
+color:#fff;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+font-size:15px;
+transition:0.3s;
+}
+
+button:hover{
+opacity:0.9;
+transform:scale(1.03);
+}
+
+.switch{
+text-align:center;
+margin-top:20px;
+cursor:pointer;
+color:#7a3e22;
+font-weight:600;
+transition:0.3s;
+}
+
+.switch:hover{
+text-decoration:underline;
+}
+
+.fade{
+animation:fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2 id="formTitle">Login</h2>
+
+<div id="loginForm" class="fade">
+<input type="text" id="loginUser" placeholder="User ID">
+<input type="password" id="loginPass" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<div id="registerForm" style="display:none;" class="fade">
+<input type="text" id="regName" placeholder="Full Name">
+<input type="email" id="regEmail" placeholder="Email">
+<input type="text" id="regMobile" placeholder="Mobile Number">
+<input type="text" id="regAddress" placeholder="Address">
+<input type="text" id="regUserId" placeholder="Create User ID">
+<input type="password" id="regPass" placeholder="Password">
+<button onclick="register()">Register</button>
+</div>
+
+<div class="switch" onclick="toggleForm()">Create Account</div>
+
+</div>
+
+<script>
+
+function toggleForm(){
+const login = document.getElementById("loginForm");
+const register = document.getElementById("registerForm");
+const title = document.getElementById("formTitle");
+const switchText = document.querySelector(".switch");
+
+if(login.style.display === "none"){
+login.style.display = "block";
+register.style.display = "none";
+title.innerText = "Login";
+switchText.innerText = "Create Account";
+}else{
+login.style.display = "none";
+register.style.display = "block";
+title.innerText = "Register";
+switchText.innerText = "Back to Login";
+}
+}
+
+function register(){
+
+let name = regName.value.trim();
+let email = regEmail.value.trim();
+let mobile = regMobile.value.trim();
+let address = regAddress.value.trim();
+let userId = regUserId.value.trim();
+let pass = regPass.value.trim();
+
+if(!name || !email || !mobile || !address || !userId || !pass){
+alert("Please fill all fields");
+return;
+}
+
+let users = JSON.parse(localStorage.getItem("maharviUsers")) || [];
+
+if(users.find(u => u.id === userId)){
+alert("User ID already exists!");
+return;
+}
+
+users.push({
+id:userId,
+name:name,
+email:email,
+mobile:mobile,
+address:address,
+password:pass,
+blocked:false
+});
+
+localStorage.setItem("maharviUsers", JSON.stringify(users));
+
+alert("Account Created Successfully!");
+toggleForm();
+}
+
+function login(){
+
+let user = loginUser.value.trim();
+let pass = loginPass.value.trim();
+
+let users = JSON.parse(localStorage.getItem("maharviUsers")) || [];
+
+let found = users.find(u => u.id === user && u.password === pass);
+
+if(!found){
+alert("Invalid ID or Password");
+return;
+}
+
+if(found.blocked){
+alert("Your Account is Blocked!");
+return;
+}
+
+localStorage.setItem("loggedUser", found.id);
+
+alert("Welcome " + found.name);
+
+window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>

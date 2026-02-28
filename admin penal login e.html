@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Approval Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== ADMIN PANEL ONLY CSS ===== */
+.admin-body{
+margin:0;
+font-family:'Montserrat',sans-serif;
+background:#f4f6fb;
+padding:20px;
+}
+
+.admin-container{
+max-width:1200px;
+margin:auto;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 15px 35px rgba(0,0,0,0.08);
+}
+
+.admin-title{
+text-align:center;
+color:#6a1b9a;
+margin-bottom:25px;
+}
+
+.table-wrapper{
+overflow-x:auto;
+}
+
+.admin-table{
+width:100%;
+border-collapse:collapse;
+min-width:700px;
+}
+
+.admin-table th{
+background:#6a1b9a;
+color:#fff;
+padding:12px;
+font-weight:600;
+font-size:14px;
+text-align:left;
+}
+
+.admin-table td{
+padding:12px;
+border-bottom:1px solid #eee;
+font-size:14px;
+}
+
+.status-active{
+color:green;
+font-weight:600;
+}
+
+.status-inactive{
+color:red;
+font-weight:600;
+}
+
+.action-btn{
+padding:6px 12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+color:#fff;
+font-size:12px;
+}
+
+.btn-activate{
+background:green;
+}
+
+.btn-deactivate{
+background:red;
+}
+
+.action-btn:hover{
+opacity:0.8;
+}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:768px){
+.admin-container{
+padding:15px;
+}
+.admin-title{
+font-size:20px;
+}
+}
+</style>
+</head>
+
+<body class="admin-body">
+
+<div class="admin-container">
+<h2 class="admin-title">Employee Approval Panel</h2>
+
+<div class="table-wrapper">
+<table class="admin-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Employee ID</th>
+<th>Mobile</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="employeeTable">
+</tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+
+function loadEmployees(){
+let employees=JSON.parse(localStorage.getItem("employees"))||[];
+let table=document.getElementById("employeeTable");
+table.innerHTML="";
+
+employees.forEach((emp,index)=>{
+
+let statusClass=emp.active ? "status-active" : "status-inactive";
+let statusText=emp.active ? "Active" : "Inactive";
+let btnClass=emp.active ? "btn-deactivate" : "btn-activate";
+let btnText=emp.active ? "Deactivate" : "Activate";
+
+let row=`
+<tr>
+<td>${emp.name}</td>
+<td>${emp.id}</td>
+<td>${emp.mobile}</td>
+<td class="${statusClass}">${statusText}</td>
+<td>
+<button class="action-btn ${btnClass}" onclick="toggleStatus(${index})">
+${btnText}
+</button>
+</td>
+</tr>
+`;
+
+table.innerHTML+=row;
+});
+
+}
+
+function toggleStatus(index){
+let employees=JSON.parse(localStorage.getItem("employees"))||[];
+employees[index].active=!employees[index].active;
+localStorage.setItem("employees",JSON.stringify(employees));
+loadEmployees();
+}
+
+loadEmployees();
+
+</script>
+
+</body>
+</html>

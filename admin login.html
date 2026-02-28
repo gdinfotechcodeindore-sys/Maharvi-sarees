@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Employee Login / Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Montserrat',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#6a1b9a,#4a0c74);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:#fff;
+width:380px;
+padding:35px;
+border-radius:12px;
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+h2{
+text-align:center;
+color:#6a1b9a;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#6a1b9a;
+color:#fff;
+border:none;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+margin-top:10px;
+transition:0.3s;
+}
+
+button:hover{
+background:#4a0c74;
+}
+
+.toggle{
+text-align:center;
+margin-top:15px;
+color:#6a1b9a;
+font-weight:600;
+cursor:pointer;
+}
+
+.message{
+text-align:center;
+margin-top:10px;
+font-size:14px;
+color:red;
+}
+
+@media(max-width:450px){
+.container{
+width:90%;
+padding:25px;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2 id="title">Employee Login</h2>
+
+<!-- LOGIN FORM -->
+<div id="loginForm">
+<input type="text" id="loginId" placeholder="Employee ID">
+<input type="password" id="loginPass" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<!-- REGISTER FORM -->
+<div id="registerForm" style="display:none;">
+<input type="text" id="regName" placeholder="Full Name">
+<input type="text" id="regMobile" placeholder="Mobile Number">
+<input type="text" id="regId" placeholder="Create Employee ID">
+<input type="password" id="regPass" placeholder="Create Password">
+<button onclick="register()">Register</button>
+</div>
+
+<div class="toggle" onclick="toggleForm()" id="toggleText">
+Create New Account
+</div>
+
+<div class="message" id="msg"></div>
+
+</div>
+
+<script>
+
+function toggleForm(){
+let login=document.getElementById("loginForm");
+let register=document.getElementById("registerForm");
+let title=document.getElementById("title");
+let toggle=document.getElementById("toggleText");
+let msg=document.getElementById("msg");
+
+msg.innerText="";
+
+if(login.style.display==="none"){
+login.style.display="block";
+register.style.display="none";
+title.innerText="Employee Login";
+toggle.innerText="Create New Account";
+}else{
+login.style.display="none";
+register.style.display="block";
+title.innerText="Employee Register";
+toggle.innerText="Back to Login";
+}
+}
+
+function register(){
+let name=regName.value;
+let mobile=regMobile.value;
+let id=regId.value;
+let pass=regPass.value;
+
+if(name==""||mobile==""||id==""||pass==""){
+msg.innerText="All fields are required!";
+return;
+}
+
+let employees=JSON.parse(localStorage.getItem("employees"))||[];
+
+if(employees.find(e=>e.id===id)){
+msg.innerText="Employee ID already exists!";
+return;
+}
+
+employees.push({
+name:name,
+mobile:mobile,
+id:id,
+password:pass,
+active:false
+});
+
+localStorage.setItem("employees",JSON.stringify(employees));
+
+msg.style.color="green";
+msg.innerText="Registered Successfully! Wait for Admin Approval.";
+}
+
+function login(){
+let id=loginId.value;
+let pass=loginPass.value;
+
+let employees=JSON.parse(localStorage.getItem("employees"))||[];
+
+let emp=employees.find(e=>e.id===id);
+
+if(!emp){
+msg.innerText="Employee Not Found!";
+return;
+}
+
+if(emp.password!==pass){
+msg.innerText="Wrong Password!";
+return;
+}
+
+if(!emp.active){
+msg.innerText="Account Not Approved by Admin!";
+return;
+}
+
+localStorage.setItem("loggedUser",id);
+window.location.href="DSHBOARD.html";
+}
+
+</script>
+
+</body>
+</html>
